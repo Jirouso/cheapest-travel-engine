@@ -1,13 +1,185 @@
-  routes.forEach((route, index) => {
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cheapest Travel Engine</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 14px;
+      background: #111;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+    }
+
+    .route {
+      background: #f1f3f5;
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 10px;
+    }
+
+    .cheap {
+      border: 2px solid #111;
+    }
+
+    .price {
+      font-size: 22px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>🌍 Cheapest Travel Engine</h1>
+
+  <p class="subtitle">
+    世界の最安旅行ルートを探そう
+  </p>
+
+  <label>出発地</label>
+  <input id="from" placeholder="例：東京">
+
+  <label>目的地</label>
+  <input id="to" placeholder="例：大阪">
+
+  <label>移動方法</label>
+
+  <select id="transport">
+    <option value="all">すべて</option>
+    <option value="flight">飛行機</option>
+    <option value="bus">バス</option>
+    <option value="train">鉄道</option>
+  </select>
+
+  <button onclick="searchRoute()">
+    🔎 最安ルートを検索
+  </button>
+
+  <div id="result"></div>
+
+</div>
+
+<script>
+
+function searchRoute() {
+
+  const from = document.getElementById("from").value;
+  const to = document.getElementById("to").value;
+  const transport = document.getElementById("transport").value;
+
+  const result = document.getElementById("result");
+
+  if (from === "" || to === "") {
+
+    result.innerHTML = `
+      <div class="route">
+        出発地と目的地を入力してください。
+      </div>
+    `;
+
+    return;
+  }
+
+  let routes = [];
+
+  if (transport === "all" || transport === "bus") {
+
+    routes.push({
+      type: "🚌 バス",
+      price: 3000,
+      time: "約8時間"
+    });
+
+  }
+
+  if (transport === "all" || transport === "flight") {
+
+    routes.push({
+      type: "✈️ 飛行機",
+      price: 5000,
+      time: "約1時間10分"
+    });
+
+  }
+
+  if (transport === "all" || transport === "train") {
+
+    routes.push({
+      type: "🚆 鉄道",
+      price: 6000,
+      time: "約2時間30分"
+    });
+
+  }
+
+  routes.sort(function(a, b) {
+    return a.price - b.price;
+  });
+
+  let html = "<h2>🔎 検索結果</h2>";
+
+  routes.forEach(function(route, index) {
 
     html += `
       <div class="route ${index === 0 ? "cheap" : ""}">
 
-        ${index === 0 ? "🏆 最安候補" : ""}
+        ${index === 0 ? "<strong>🏆 最安候補</strong>" : ""}
 
         <h3>${route.type}</h3>
 
-        <p>${from} → ${to}</p>
+        <p>
+          ${from} → ${to}
+        </p>
 
         <p>
           💰 <span class="price">
@@ -15,7 +187,9 @@
           </span>
         </p>
 
-        <p>⏱ ${route.time}</p>
+        <p>
+          ⏱ ${route.time}
+        </p>
 
       </div>
     `;
@@ -25,3 +199,8 @@
   result.innerHTML = html;
 
 }
+
+</script>
+
+</body>
+</html>
