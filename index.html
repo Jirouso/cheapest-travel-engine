@@ -6,150 +6,204 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cheapest Travel Engine</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f2f6fa;color:#172b3a}
-header{background:#102a43;color:white;text-align:center;padding:28px 16px}
-header h1{margin:0 0 8px}
-main{max-width:850px;margin:24px auto;padding:0 14px}
-.panel,.result{background:white;padding:20px;border-radius:12px;margin-bottom:16px}
-.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-label{display:block;font-weight:bold;margin:12px 0 6px}
-input,select{width:100%;padding:12px;border:1px solid #bdcbd8;border-radius:8px;font-size:16px}
-button{padding:12px 18px;border:0;border-radius:8px;background:#087e8b;color:white;font-size:16px;cursor:pointer;margin-top:14px}
-button:hover{background:#06636d}
-.options{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0}
-.options label{display:flex;align-items:center;gap:6px;margin:0;font-weight:normal}
-.options input{width:auto}
-.price{font-size:25px;font-weight:bold;color:#087e8b;margin-top:10px}
-.route{font-size:18px;font-weight:bold}
-.meta,.notice{color:#52677e;font-size:13px;line-height:1.6}
-.tag{display:inline-block;background:#e1f4f2;padding:5px 9px;border-radius:20px;font-size:12px;margin-bottom:10px}
-@media(max-width:560px){.fields{grid-template-columns:1fr}.panel{padding:15px}}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f2f6fa;
+  color: #172b3a;
+}
+header {
+  background: #102a43;
+  color: white;
+  text-align: center;
+  padding: 28px 16px;
+}
+header h1 { margin: 0 0 8px; }
+main { max-width: 850px; margin: 24px auto; padding: 0 14px; }
+.panel, .result {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+label { display: block; font-weight: bold; margin: 12px 0 6px; }
+input, select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #bdcbd8;
+  border-radius: 8px;
+  font-size: 16px;
+}
+button {
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: #087e8b;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 14px;
+}
+button:hover { background: #06636d; }
+.options { display: flex; flex-wrap: wrap; gap: 16px; margin: 14px 0; }
+.options label { display: flex; align-items: center; gap: 6px; margin: 0; font-weight: normal; }
+.options input { width: auto; }
+.price { font-size: 25px; font-weight: bold; color: #087e8b; margin-top: 10px; }
+.route { font-size: 18px; font-weight: bold; }
+.meta, .notice { color: #52677e; font-size: 13px; line-height: 1.6; }
+.tag { display: inline-block; background: #e1f4f2; padding: 5px 9px; border-radius: 20px; font-size: 12px; margin-bottom: 10px; }
+@media(max-width:560px) {
+  .fields { grid-template-columns: 1fr; }
+  .panel { padding: 15px; }
+}
 </style>
 </head>
 <body>
 <header>
-<h1>🌍 Cheapest Travel Engine</h1>
-<p>Find a cheaper way around the world.</p>
+  <h1>🌍 Cheapest Travel Engine</h1>
+  <p>Find a cheaper way around the world.</p>
 </header>
-<main>
-<section class="panel">
-<h2>旅行ルートを検索</h2>
-<form id="searchForm">
-<div class="fields">
-<div>
-<label for="origin">出発地</label>
-<input id="origin" list="cities" placeholder="Tokyo" value="Tokyo" required>
-</div>
-<div>
-<label for="destination">目的地</label>
-<input id="destination" list="cities" placeholder="Cairo" value="Cairo" required>
-</div>
-</div>
-<datalist id="cities">
-<option value="Tokyo"><option value="Nagoya"><option value="Osaka">
-<option value="Seoul"><option value="Bangkok"><option value="Singapore">
-<option value="Cairo"><option value="Nairobi"><option value="London">
-<option value="Paris"><option value="New York"><option value="Lima">
-<option value="Buenos Aires"><option value="Istanbul"><option value="Dubai">
-</datalist>
-<p><strong>移動手段</strong></p>
-<div class="options">
-<label><input type="checkbox" name="mode" value="flight" checked> ✈️ 飛行機</label>
-<label><input type="checkbox" name="mode" value="bus" checked> 🚌 バス</label>
-<label><input type="checkbox" name="mode" value="train" checked> 🚆 鉄道</label>
-</div>
-<label for="stops">乗り継ぎ回数</label>
-<select id="stops">
-<option value="0">直行ルートのみ</option>
-<option value="1" selected>直行＋1回乗り継ぎ</option>
-<option value="2">直行＋最大2回乗り継ぎ</option>
-</select>
-<button type="submit">最安ルートを検索</button>
-</form>
-<p class="notice">デモ版：表示料金・所要時間は仮データです。実際の運賃、運行状況、接続可能な経路を示すものではありません。</p>
-</section>
 
-<section>
-<div class="fields">
-<h2>検索結果</h2>
-<div>
-<label for="sort">並び順</label>
-<select id="sort">
-<option value="price">合計料金が安い順</option>
-<option value="time">所要時間が短い順</option>
-</select>
-</div>
-</div>
-<p id="summary">検索してね。</p>
-<div id="results"></div>
-</section>
+<main>
+  <section class="panel">
+    <h2>旅行ルートを検索</h2>
+    <form id="searchForm">
+      <div class="fields">
+        <div>
+          <label for="origin">出発地</label>
+          <input id="origin" list="cities" placeholder="Tokyo" value="Tokyo" required>
+        </div>
+        <div>
+          <label for="destination">目的地</label>
+          <input id="destination" list="cities" placeholder="Cairo" value="Cairo" required>
+        </div>
+      </div>
+
+      <datalist id="cities">
+        <option value="Tokyo">
+        <option value="Nagoya">
+        <option value="Osaka">
+        <option value="Seoul">
+        <option value="Bangkok">
+        <option value="Singapore">
+        <option value="Cairo">
+        <option value="Nairobi">
+        <option value="London">
+        <option value="Paris">
+        <option value="New York">
+        <option value="Lima">
+        <option value="Buenos Aires">
+        <option value="Istanbul">
+        <option value="Dubai">
+      </datalist>
+
+      <p><strong>移動手段</strong></p>
+      <div class="options">
+        <label><input type="checkbox" name="mode" value="flight" checked> ✈️ 飛行機</label>
+        <label><input type="checkbox" name="mode" value="bus" checked> 🚌 バス</label>
+        <label><input type="checkbox" name="mode" value="train" checked> 🚆 鉄道</label>
+      </div>
+
+      <label for="stops">乗り継ぎ回数</label>
+      <select id="stops">
+        <option value="0">直行ルートのみ</option>
+        <option value="1" selected>直行＋1回乗り継ぎ</option>
+        <option value="2">直行＋最大2回乗り継ぎ</option>
+      </select>
+      <button type="submit">最安ルートを検索</button>
+    </form>
+    <p class="notice">デモ版：表示料金・所要時間は仮データです。実際の運賃、運行状況、接続可能な経路を示すものではありません。</p>
+  </section>
+
+  <section>
+    <div class="fields">
+      <h2>検索結果</h2>
+      <div>
+        <label for="sort">並び順</label>
+        <select id="sort">
+          <option value="price">合計料金が安い順</option>
+          <option value="time">所要時間が短い順</option>
+        </select>
+      </div>
+    </div>
+    <p id="summary">検索してね。</p>
+    <div id="results"></div>
+  </section>
 </main>
+
 <script>
 const $ = id => document.getElementById(id);
 
 const demoRoutes = [
-  {via:"直行",mode:"flight",price:42000,hours:13,stops:0},
-  {via:"Seoul",mode:"flight",price:31000,hours:17,stops:1},
-  {via:"Bangkok",mode:"flight",price:28000,hours:19,stops:1},
-  {via:"Dubai",mode:"flight",price:35000,hours:16,stops:1},
-  {via:"Singapore → Dubai",mode:"flight",price:33000,hours:23,stops:2},
-  {via:"Seoul → Bangkok",mode:"flight",price:30000,hours:25,stops:2},
-  {via:"近距離の陸路接続",mode:"bus",price:6000,hours:9,stops:0},
-  {via:"近距離の陸路接続",mode:"train",price:10000,hours:5,stops:0}
+  { from: "Tokyo", to: "Cairo", via: "Dubai", mode: "flight", price: 35000, hours: 16, stops: 1 },
+  { from: "Tokyo", to: "Cairo", via: "Singapore → Dubai", mode: "flight", price: 33000, hours: 23, stops: 2 },
+  { from: "Tokyo", to: "Cairo", via: "Seoul → Bangkok", mode: "flight", price: 30000, hours: 25, stops: 2 },
+  { from: "Tokyo", to: "Seoul", via: "直行", mode: "flight", price: 12000, hours: 3, stops: 0 },
+  { from: "Tokyo", to: "Seoul", via: "Osaka", mode: "flight", price: 10000, hours: 6, stops: 1 },
+  { from: "Tokyo", to: "Bangkok", via: "直行", mode: "flight", price: 25000, hours: 7, stops: 0 },
+  { from: "Tokyo", to: "Bangkok", via: "Singapore", mode: "flight", price: 22000, hours: 11, stops: 1 }
 ];
 
 let currentRoutes = [];
 
-function search(event){
+function search(event) {
   event.preventDefault();
+  currentRoutes = [];
+  $("results").replaceChildren();
+
   const from = $("origin").value.trim();
   const to = $("destination").value.trim();
 
-  if(!from || !to){
+  if (!from || !to) {
     $("summary").textContent = "出発地と目的地を入力してください。";
-    $("results").replaceChildren();
     return;
   }
 
-  if(from.toLowerCase() === to.toLowerCase()){
+  const normalize = value => value.trim().toLowerCase();
+
+  if (normalize(from) === normalize(to)) {
     $("summary").textContent = "異なる都市を入力してください。";
-    $("results").replaceChildren();
     return;
   }
 
   const modes = [...document.querySelectorAll('input[name="mode"]:checked')]
     .map(el => el.value);
 
-  if(modes.length === 0){
+  if (modes.length === 0) {
     $("summary").textContent = "移動手段を1つ以上選択してください。";
-    $("results").replaceChildren();
     return;
   }
 
   const maxStops = Number($("stops").value);
 
-  currentRoutes = demoRoutes
-    .filter(r => modes.includes(r.mode) && r.stops <= maxStops)
-    .map(r => ({...r,from,to}));
+  currentRoutes = demoRoutes.filter(r =>
+    normalize(r.from) === normalize(from) &&
+    normalize(r.to) === normalize(to) &&
+    modes.includes(r.mode) &&
+    r.stops <= maxStops
+  );
+
+  if (currentRoutes.length === 0) {
+    $("summary").textContent =
+      "該当する経路がありません。現在は一部の都市のサンプルのみ対応しています。";
+    return;
+  }
 
   render();
 }
 
-function render(){
-  const sorted = [...currentRoutes].sort((a,b) =>
-    $("sort").value === "price" ? a.price-b.price : a.hours-b.hours
+function render() {
+  const sorted = [...currentRoutes].sort((a, b) =>
+    $("sort").value === "price" ? a.price - b.price : a.hours - b.hours
   );
 
-  $("summary").textContent = `${$("origin").value} → ${$("destination").value}：${sorted.length}件のデモ候補`;
+  $("summary").textContent =
+    `${$("origin").value} → ${$("destination").value}：${sorted.length}件のデモ候補`;
   $("results").replaceChildren();
 
-  if(sorted.length === 0){
-    $("results").textContent = "条件に合う候補がありません。";
-    return;
-  }
-
-  sorted.forEach((r,i) => {
+  sorted.forEach((r, i) => {
     const card = document.createElement("article");
     card.className = "result";
 
@@ -164,7 +218,7 @@ function render(){
 
     const mode = document.createElement("p");
     mode.className = "meta";
-    mode.textContent = `移動手段：${r.mode === "flight" ? "飛行機" : r.mode === "bus" ? "バス" : "鉄道"} ／ 乗り継ぎ：${r.stops}回`;
+    mode.textContent = `移動手段：飛行機 ／ 乗り継ぎ：${r.stops}回`;
 
     const time = document.createElement("p");
     time.className = "meta";
@@ -174,19 +228,23 @@ function render(){
     price.className = "price";
     price.textContent = `仮料金 ¥${r.price.toLocaleString("ja-JP")}`;
 
-    card.append(tag,title,mode,time,price);
+    card.append(tag, title, mode, time, price);
     $("results").appendChild(card);
   });
 
   const note = document.createElement("p");
   note.className = "notice";
-  note.textContent = "重要：経由地・料金・所要時間は動作確認用の仮データです。実際に接続できる交通機関や予約可能な経路を表していません。";
+  note.textContent =
+    "重要：経由地・料金・所要時間は動作確認用の仮データです。実際に接続できる交通機関や予約可能な経路を表していません。";
   $("results").appendChild(note);
 }
 
-$("searchForm").addEventListener("submit",search);
-$("sort").addEventListener("change",render);
-search(new Event("submit",{cancelable:true,preventDefault(){}}));
+$("searchForm").addEventListener("submit", search);
+$("sort").addEventListener("change", () => {
+  if (currentRoutes.length > 0) render();
+});
+
+search(new Event("submit", { cancelable: true }));
 </script>
 </body>
 </html>
